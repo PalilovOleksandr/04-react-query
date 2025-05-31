@@ -1,8 +1,8 @@
 import SearchBar from "../SearchBar/SearchBar";
 import css from "./App.module.css";
 import { type Movie } from "../../types/movie";
-import { useState } from "react";
-import { Toaster } from "react-hot-toast";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import MovieGrid from "../MovieGrid/MovieGrid";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
@@ -22,8 +22,14 @@ export default function App() {
         enabled: query !== "",
         placeholderData: keepPreviousData,
     });
+    useEffect(() => {
+        if (data?.results.length === 0) {
+            toast.error("No movies found for your request.");
+        }
+    }, [data]);
     const handleSearch = async (newQuery: string) => {
         setQuery(newQuery);
+        setCurrentPage(1);
     };
     const totalPages = data?.total_pages ?? 0;
     return (

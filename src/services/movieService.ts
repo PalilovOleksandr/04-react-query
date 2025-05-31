@@ -22,6 +22,5 @@ export const fetchMovies = async (query: string, page: number) => {
       },
     }
   );
-
   return response.data;
 };
