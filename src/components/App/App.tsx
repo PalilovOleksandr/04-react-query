@@ -23,10 +23,10 @@ export default function App() {
         placeholderData: keepPreviousData,
     });
     useEffect(() => {
-        if (data?.results.length === 0) {
+        if (data?.results.length === 0 && isSuccess) {
             toast.error("No movies found for your request.");
         }
-    }, [data]);
+    }, [data, isSuccess]);
     const handleSearch = (newQuery: string) => {
         setQuery(newQuery);
         setCurrentPage(1);
@@ -35,10 +35,13 @@ export default function App() {
     const selectCard = (movie: Movie | null): void => {
         setSelectedMovie(movie);
     }
+    const handleSelectedMovie = () => {
+        setSelectedMovie(null);
+    }
     return (
         <div className={css.app}>
+            <Toaster />
             <SearchBar onSubmit={handleSearch} />
-            {isSuccess && <Toaster />}
             {isPending && query !== "" && <Loader />}
             {isSuccess && totalPages > 1 && (
                 <ReactPaginate
@@ -54,7 +57,7 @@ export default function App() {
             )}
             {isError && <ErrorMessage />}
             {data && data.results.length > 0 && < MovieGrid onSelect={selectCard} movies={data.results} />}
-            {selectedMovie && <MovieModal onClose={() => setSelectedMovie(null)} movie={selectedMovie} />}
+            {selectedMovie && <MovieModal onClose={handleSelectedMovie} movie={selectedMovie} />}
         </div>
     )
 }
